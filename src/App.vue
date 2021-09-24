@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <h1>都道府県</h1>
-    <label v-for="(item, key) in prefectures" :key="key">
-      <input type="checkbox" :value="key" v-model="checkedValue" v-on:click="getData(item.prefName, item.prefCode, $event)">
-      {{ item.prefName }}
-    </label>
-    <!-- <span>Checked value: {{ checkedValue }}</span> -->
+    <div class="checkbox-list">
+      <h3>都道府県</h3>
+      <div v-for="(item, key) in prefectures" :key="key" class="checkbox-item">
+        <label class="custom-checkbox">
+          {{ item.prefName }}
+          <input type="checkbox" v-on:click="getData(item.prefName, item.prefCode, $event)">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+    </div>
     <line-chart 
       v-if="loaded"
       :chart-data="datacollection"
@@ -29,15 +32,22 @@ export default {
       datacollection: null,
       loaded: false,
       options: {
+         scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        },
         responsive: true,
         maintainAspectRatio: false
       },
       population: [],
       years: [],
+      chartcolor:null,
       prefectures: [],
       populations: null,
       dataset: [],
-      checkedValue: []
     }
   },
   async created() {
@@ -72,11 +82,11 @@ export default {
         }).then(response => {
           let value = response.data.result.data;
           scop.populations = value[0].data;
-          scop.population = [''];
-          scop.years = [''];
+          scop.population = [];
+          scop.years = [];
           for (let i = 0; i < scop.populations.length; i+=2) {
             let year = scop.populations[i].year;
-            if(year % 2 == 0) {
+            if((year >= 1980) && (year % 2 == 0)) {
               scop.years.push(year);
               scop.population.push(scop.populations[i].value);
             }
@@ -84,12 +94,13 @@ export default {
               break;
             }
           }
+          this.mycolor = '#'+(Math.random()*0xFFFFFF<<0).toString(16); //set random color for chart
           this.dataset.push({
             label: prefNameValue,
-            borderColor: 'blue', 
-            pointBackgroundColor: 'blue', 
+            borderColor: this.mycolor, 
+            pointBackgroundColor: this.mycolor, 
             borderWidth: 1, 
-            pointBorderColor: 'blue',
+            pointBorderColor: this.mycolor,
             data: this.population
           }); 
           this.fillData();
@@ -127,5 +138,60 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.checkbox-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.checkbox-list h3 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+.checkbox-list .checkbox-item{
+  flex: 0 0 16.66667%;
+  max-width: 16.66667%;
+}
+/* start: custom-checkbox */
+.custom-checkbox {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    cursor: pointer;
+    font-weight: normal;
+    word-wrap: break-word;
+    margin-bottom: .5rem;
+}
+/* Hide the browser's default checkbox */
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+.custom-checkbox .checkmark {
+    position: absolute;
+    top: 2px;
+    left: 50px;
+    height: 18px;
+    width: 18px;
+    border: 1.5px solid #000000;
+}
+
+.custom-checkbox .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+.custom-checkbox .checkmark:after {
+    content: '\2714';
+    font-size: 17px;
+    position: absolute;
+    top: -2px;
+    left: 3px;
+    color: #000000;
 }
 </style>
