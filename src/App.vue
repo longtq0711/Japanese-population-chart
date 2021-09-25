@@ -38,13 +38,13 @@ export default {
               beginAtZero: true
             },
             gridLines: {
-							color: "rgba(0, 0, 0, 0)",
-						}
+              color: 'rgba(0, 0, 0, 0)'
+            }
           }],
           xAxes: [{
             gridLines: {
-							color: "rgba(0, 0, 0, 0)",
-						}
+              color: 'rgba(0, 0, 0, 0)'
+            }
           }]
         },
         responsive: true,
@@ -77,6 +77,7 @@ export default {
   },
   methods: {
     getData (prefNameValue, prefCodeValue, event) {
+      //Check if checkbox is checked than get data
       if (event.target.checked) {
         const APIKEY = 'aOxiRQPVhQ3Qxzs55UWDKo60M51tRnEY46QyIEm1'
         const headers = {
@@ -92,10 +93,11 @@ export default {
           scop.populations = value[0].data
           scop.population = []
           scop.years = ['']
+          // add data to show at xAxios and yAxios of chart
           for (let i = 0; i < scop.populations.length; i += 2) {
             const year = scop.populations[i].year
             if ((year >= 1970) && (year % 2 === 0)) {
-              if(year >= 1980) scop.years.push(year)
+              if (year >= 1980) scop.years.push(year)
               scop.population.push(scop.populations[i].value)
             }
             if (year === 2020) {
@@ -116,7 +118,7 @@ export default {
         }).catch(error => {
           console.log(error.message)
         })
-      } else {
+      } else { //Else splice that one
         const found = this.dataset.findIndex(function (element) {
           return element.label === prefNameValue
         })
