@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     getData (prefNameValue, prefCodeValue, event) {
-      //Check if checkbox is checked than get data
+      // Check if checkbox is checked than get data
       if (event.target.checked) {
         const APIKEY = 'aOxiRQPVhQ3Qxzs55UWDKo60M51tRnEY46QyIEm1'
         const headers = {
@@ -118,7 +118,7 @@ export default {
         }).catch(error => {
           console.log(error.message)
         })
-      } else { //Else splice that one
+      } else { // Else splice that one
         const found = this.dataset.findIndex(function (element) {
           return element.label === prefNameValue
         })
