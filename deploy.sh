@@ -17,6 +17,6 @@ git add -A
 git commit -m 'deploy'
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:longtq0711/Japanese-s-population-chart.git main:gh-pages
+git push -f git@github.com:longtq0711/Japanese-population-chart.git master:gh-pages
 
 cd -
